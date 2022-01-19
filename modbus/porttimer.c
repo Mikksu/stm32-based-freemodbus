@@ -21,7 +21,6 @@
 
 /* ----------------------- Platform includes --------------------------------*/
 #include "port.h"
-
 /* ----------------------- Modbus includes ----------------------------------*/
 #include "mb.h"
 #include "mbport.h"
@@ -33,6 +32,8 @@ static void prvvTIMERExpiredISR( void );
 
 uint16_t timeout = 0;
 uint16_t downcounter = 0;
+
+TIM_HandleTypeDef* htimTimeout = &htim4;
 
 /* ----------------------- Start implementation -----------------------------*/
 BOOL
@@ -49,15 +50,15 @@ vMBPortTimersEnable(  )
 {
     /* Enable the timer with the timeout passed to xMBPortTimersInit( ) */
     downcounter = timeout;
-	__HAL_TIM_SET_COUNTER(&htim4, 0);
-    HAL_TIM_Base_Start_IT(&htim4);
+	__HAL_TIM_SET_COUNTER(htimTimeout, 0);
+    HAL_TIM_Base_Start_IT(htimTimeout));
 }
 
 inline void
 vMBPortTimersDisable(  )
 {
     /* Disable any pending timers. */
-    HAL_TIM_Base_Stop_IT(&htim4);
+    HAL_TIM_Base_Stop_IT(htimTimeout);
 }
 
 inline void 
